@@ -2,11 +2,62 @@
 
 import streamlit as st
 from openai import OpenAI
-
+from utils.chat_helper import (
+    build_chat_prompt,
+)
 
 def get_openai_client():
     """Create and return an OpenAI client using Streamlit secrets."""
     return OpenAI(api_key=st.secrets["Fin-Genie-Key"])
+
+def generate_chat_response(
+    user_question,
+    conversation_history=None,
+    product_context=None,
+    user_profile_context=None,
+):
+    """
+    Generate a conversational response using OpenAI.
+    """
+
+    try:
+
+        client = get_openai_client()
+
+        prompt = build_chat_prompt(
+
+            user_question=user_question,
+
+            conversation_history=(
+                conversation_history
+            ),
+
+            product_context=(
+                product_context
+            ),
+
+            user_profile_context=(
+                user_profile_context
+            ),
+        )
+
+        response = client.responses.create(
+
+            model="gpt-5-mini",
+
+            input=prompt,
+        )
+
+        return response.output_text
+
+    except Exception as e:
+
+        return (
+            "I'm sorry, but I'm unable to process "
+            "Your question right now. Please try again."
+        )
+
+
 
 
 def generate_faq(product_name, user_profile="general"):
