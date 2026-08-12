@@ -1,9 +1,6 @@
 import streamlit as st
 
-from utils.ai_helper import (
-    generate_chat_response,
-)
-
+from utils.ai_helper import generate_chat_response
 from utils.financial_data import products
 
 
@@ -38,8 +35,8 @@ st.title(
 
 st.markdown(
     """
-    Ask questions about financial products, saving,
-    borrowing, budgeting, debt, and personal finance.
+    Ask FinGenie questions about financial products,
+    saving, borrowing, budgeting, debt, and personal finance.
     """
 )
 
@@ -55,6 +52,10 @@ st.warning(
     FinGenie provides general educational information
     and estimates. It does not provide personalized
     financial, investment, tax, legal, or accounting advice.
+
+    Please verify current rates, fees, terms, eligibility,
+    and product availability with the relevant financial
+    institution.
 
     Do not enter sensitive information such as your Social
     Security number, bank account number, password,
@@ -78,24 +79,24 @@ selected_product = st.sidebar.selectbox(
 )
 
 
-st.sidebar.markdown("---")
+# =========================================================
+# USER PROFILE
+# =========================================================
 
+st.sidebar.markdown("---")
 
 st.sidebar.subheader(
     "👤 Optional Profile"
 )
 
 
-age_range = st.sidebar.selectbox(
-    "Age Range",
+user_profile = st.sidebar.selectbox(
+    "User Profile",
     [
-        "Prefer not to say",
-        "18–24",
-        "25–34",
-        "35–44",
-        "45–54",
-        "55–64",
-        "65+",
+        "General",
+        "Student",
+        "Professional",
+        "Retiree",
     ],
 )
 
@@ -110,17 +111,6 @@ financial_goal = st.sidebar.selectbox(
         "Save for retirement",
         "Save for education",
         "Other",
-    ],
-)
-
-
-risk_preference = st.sidebar.selectbox(
-    "General Preference",
-    [
-        "Prefer not to say",
-        "Focus on safety",
-        "Balance safety and growth",
-        "Focus on growth",
     ],
 )
 
@@ -161,14 +151,13 @@ if selected_product != "None":
 # =========================================================
 
 user_profile_context = (
-    f"Age Range: {age_range}\n"
-    f"Primary Goal: {financial_goal}\n"
-    f"General Preference: {risk_preference}"
+    f"User Profile: {user_profile}\n"
+    f"Primary Financial Goal: {financial_goal}"
 )
 
 
 # =========================================================
-# CHAT HISTORY
+# CHAT HISTORY DISPLAY
 # =========================================================
 
 st.subheader(
@@ -261,6 +250,8 @@ user_question = st.chat_input(
 )
 
 
+# Handle suggested question
+
 if st.session_state.pending_question:
 
     user_question = (
@@ -271,7 +262,7 @@ if st.session_state.pending_question:
 
 
 # =========================================================
-# AI RESPONSE
+# PROCESS QUESTION
 # =========================================================
 
 if user_question:
@@ -313,37 +304,23 @@ if user_question:
             "FinGenie is thinking..."
         ):
 
-            try:
+            response = generate_chat_response(
 
-                response = (
-                    generate_chat_response(
+                user_question=user_question,
 
-                        user_question=(
-                            user_question
-                        ),
+                conversation_history=(
+                    st.session_state
+                    .chat_messages[-20:-1]
+                ),
 
-                        conversation_history=(
-                            st.session_state
-                            .chat_messages[-20:-1]
-                        ),
+                product_context=(
+                    product_context
+                ),
 
-                        product_context=(
-                            product_context
-                        ),
-
-                        user_profile_context=(
-                            user_profile_context
-                        ),
-                    )
-                )
-
-            except Exception:
-
-                response = (
-                    "I'm sorry, I couldn't process "
-                    "your question right now. "
-                    "Please try again."
-                )
+                user_profile_context=(
+                    user_profile_context
+                ),
+            )
 
 
         st.markdown(
@@ -364,7 +341,7 @@ if user_question:
 
 
 # =========================================================
-# CLEAR CHAT
+# CLEAR CONVERSATION
 # =========================================================
 
 st.markdown("---")
@@ -377,17 +354,3 @@ if st.button(
     st.session_state.chat_messages = []
 
     st.rerun()
-
-
-# =========================================================
-# FOOTER
-# =========================================================
-
-st.markdown("---")
-
-st.caption(
-    "FinGenie provides educational information only. "
-    "Verify current rates, fees, terms, eligibility, "
-    "and product availability with the relevant "
-    "financial institution."
-)
