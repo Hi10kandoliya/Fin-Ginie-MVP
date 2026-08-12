@@ -19,6 +19,13 @@ products = {
         "Are there monthly fees?",
     ],
 
+    "suggested_questions": [
+            "What are the advantages of a savings account?",
+            "How liquid is a savings account?",
+            "How does a savings account compare with a CD?",
+            "What fees should I look for?",
+    ],
+
     "best_for": [
         "Emergency savings",
         "Short-term savings",
@@ -68,6 +75,12 @@ products = {
             "What documents are required?",
             "Can I prepay without penalty?",
             "What is the processing fee?"
+        ],
+      "suggested_questions": [
+            "What factors affect my mortgage payment?",
+            "What is the difference between APR and interest rate?",
+            "What is PMI?",
+            "How does a 15-year mortgage compare with a 30-year mortgage?",
         ]
     },
 
