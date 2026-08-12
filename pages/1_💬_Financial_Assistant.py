@@ -1,7 +1,9 @@
-
 import streamlit as st
 
-from utils.ai_helper import generate_chat_response
+from utils.ai_helper import (
+    generate_chat_response,
+)
+
 from utils.financial_data import products
 
 
@@ -12,82 +14,76 @@ st.set_page_config(
 )
 
 
-# ---------------------------------------------------------
+# =========================================================
 # SESSION STATE
-# ---------------------------------------------------------
+# =========================================================
 
 if "chat_messages" not in st.session_state:
 
     st.session_state.chat_messages = []
 
 
-if "selected_product" not in st.session_state:
+if "pending_question" not in st.session_state:
 
-    st.session_state.selected_product = None
-
-
-if "user_profile" not in st.session_state:
-
-    st.session_state.user_profile = {}
+    st.session_state.pending_question = None
 
 
-# ---------------------------------------------------------
+# =========================================================
 # HEADER
-# ---------------------------------------------------------
+# =========================================================
 
-st.title("💬 FinGenie AI Financial Assistant")
+st.title(
+    "💬 FinGenie AI Financial Assistant"
+)
 
 st.markdown(
     """
-    Ask FinGenie questions about financial products,
-    saving, borrowing, budgeting, and personal finance.
+    Ask questions about financial products, saving,
+    borrowing, budgeting, debt, and personal finance.
     """
 )
 
 
-# ---------------------------------------------------------
+# =========================================================
 # DISCLAIMER
-# ---------------------------------------------------------
+# =========================================================
 
 st.warning(
     """
     **Financial Education Disclaimer**
 
-    FinGenie provides general educational information and
-    estimates. It does not provide personalized financial,
-    investment, tax, legal, or accounting advice.
+    FinGenie provides general educational information
+    and estimates. It does not provide personalized
+    financial, investment, tax, legal, or accounting advice.
 
     Do not enter sensitive information such as your Social
-    Security number, bank account number, password, or
-    credit/debit card information.
+    Security number, bank account number, password,
+    credit/debit card number, or authentication code.
     """
 )
 
 
-# ---------------------------------------------------------
-# SIDEBAR - CONTEXT
-# ---------------------------------------------------------
+# =========================================================
+# SIDEBAR
+# =========================================================
 
-st.sidebar.header("🎯 Conversation Context")
-
-
-selected_product = st.sidebar.selectbox(
-    "Financial Product Context",
-    ["None"] + list(products.keys()),
+st.sidebar.header(
+    "🎯 Conversation Context"
 )
 
 
-st.session_state.selected_product = (
-    None
-    if selected_product == "None"
-    else selected_product
+selected_product = st.sidebar.selectbox(
+    "Financial Product",
+    ["None"] + list(products.keys()),
 )
 
 
 st.sidebar.markdown("---")
 
 
-st.sidebar.subheader("👤 Optional Profile")
+st.sidebar.subheader(
+    "👤 Optional Profile"
+)
 
 
 age_range = st.sidebar.selectbox(
@@ -129,39 +125,40 @@ risk_preference = st.sidebar.selectbox(
 )
 
 
-st.session_state.user_profile = {
-
-    "age_range": age_range,
-
-    "financial_goal": financial_goal,
-
-    "risk_preference": risk_preference,
-}
-
-
-# ---------------------------------------------------------
+# =========================================================
 # PRODUCT CONTEXT
-# ---------------------------------------------------------
+# =========================================================
 
 product_context = None
 
 
 if selected_product != "None":
 
-    product = products[selected_product]
+    product = products[
+        selected_product
+    ]
+
+    features = product.get(
+        "features",
+        []
+    )
+
+    questions = product.get(
+        "common_questions",
+        []
+    )
 
     product_context = (
         f"Product Name: {selected_product}\n"
-        f"Features: "
-        f"{', '.join(product.get('features', []))}\n"
+        f"Features: {', '.join(features)}\n"
         f"Common Questions: "
-        f"{', '.join(product.get('common_questions', []))}"
+        f"{', '.join(questions)}"
     )
 
 
-# ---------------------------------------------------------
-# USER PROFILE CONTEXT
-# ---------------------------------------------------------
+# =========================================================
+# USER CONTEXT
+# =========================================================
 
 user_profile_context = (
     f"Age Range: {age_range}\n"
@@ -170,22 +167,26 @@ user_profile_context = (
 )
 
 
-# ---------------------------------------------------------
+# =========================================================
 # CHAT HISTORY
-# ---------------------------------------------------------
+# =========================================================
 
-st.subheader("💬 Conversation")
+st.subheader(
+    "💬 Conversation"
+)
 
 
 if not st.session_state.chat_messages:
 
     st.info(
         "👋 Hello! I'm FinGenie. "
-        "Ask me a question about personal finance."
+        "What would you like to know about finance?"
     )
 
 
-for message in st.session_state.chat_messages:
+for message in (
+    st.session_state.chat_messages
+):
 
     with st.chat_message(
         message["role"]
@@ -196,29 +197,47 @@ for message in st.session_state.chat_messages:
         )
 
 
-# ---------------------------------------------------------
+# =========================================================
 # SUGGESTED QUESTIONS
-# ---------------------------------------------------------
+# =========================================================
 
-st.markdown("### 💡 Suggested Questions")
-
-
-suggested_questions = [
-    "What is the difference between a savings account and a CD?",
-    "What are the advantages of a high-yield savings account?",
-    "What are the risks of a CD?",
-    "Which financial products are more liquid?",
-]
+st.markdown(
+    "### 💡 Suggested Questions"
+)
 
 
-cols = st.columns(2)
+if selected_product != "None":
+
+    product_questions = products[
+        selected_product
+    ].get(
+        "suggested_questions",
+        []
+    )
+
+else:
+
+    product_questions = []
+
+
+if not product_questions:
+
+    product_questions = [
+        "What is the difference between a savings account and a CD?",
+        "What are the advantages of a high-yield savings account?",
+        "What are the risks of a CD?",
+        "Which financial products are more liquid?",
+    ]
+
+
+columns = st.columns(2)
 
 
 for index, question in enumerate(
-    suggested_questions
+    product_questions[:4]
 ):
 
-    with cols[index % 2]:
+    with columns[index % 2]:
 
         if st.button(
             question,
@@ -226,40 +245,40 @@ for index, question in enumerate(
             use_container_width=True,
         ):
 
-            st.session_state.pending_question = question
+            st.session_state.pending_question = (
+                question
+            )
 
             st.rerun()
 
 
-# ---------------------------------------------------------
+# =========================================================
 # CHAT INPUT
-# ---------------------------------------------------------
+# =========================================================
 
 user_question = st.chat_input(
     "Ask FinGenie a financial question..."
 )
 
 
-# Support suggested questions
-if (
-    "pending_question"
-    in st.session_state
-):
+if st.session_state.pending_question:
 
     user_question = (
         st.session_state.pending_question
     )
 
-    del st.session_state.pending_question
+    st.session_state.pending_question = None
 
 
-# ---------------------------------------------------------
-# PROCESS USER QUESTION
-# ---------------------------------------------------------
+# =========================================================
+# AI RESPONSE
+# =========================================================
 
 if user_question:
 
-    # Add user message
+    # -----------------------------------------------------
+    # Save user message
+    # -----------------------------------------------------
 
     st.session_state.chat_messages.append(
         {
@@ -269,45 +288,72 @@ if user_question:
     )
 
 
+    # -----------------------------------------------------
     # Display user message
+    # -----------------------------------------------------
 
-    with st.chat_message("user"):
+    with st.chat_message(
+        "user"
+    ):
 
         st.markdown(
             user_question
         )
 
 
+    # -----------------------------------------------------
     # Generate AI response
+    # -----------------------------------------------------
 
-    with st.chat_message("assistant"):
+    with st.chat_message(
+        "assistant"
+    ):
 
         with st.spinner(
             "FinGenie is thinking..."
         ):
 
-            response = generate_chat_response(
+            try:
 
-                user_question=user_question,
+                response = (
+                    generate_chat_response(
 
-                conversation_history=(
-                    st.session_state.chat_messages[
-                        :-1
-                    ]
-                ),
+                        user_question=(
+                            user_question
+                        ),
 
-                product_context=product_context,
+                        conversation_history=(
+                            st.session_state
+                            .chat_messages[-20:-1]
+                        ),
 
-                user_profile_context=(
-                    user_profile_context
-                ),
-            )
+                        product_context=(
+                            product_context
+                        ),
+
+                        user_profile_context=(
+                            user_profile_context
+                        ),
+                    )
+                )
+
+            except Exception:
+
+                response = (
+                    "I'm sorry, I couldn't process "
+                    "your question right now. "
+                    "Please try again."
+                )
 
 
-        st.markdown(response)
+        st.markdown(
+            response
+        )
 
 
+    # -----------------------------------------------------
     # Save AI response
+    # -----------------------------------------------------
 
     st.session_state.chat_messages.append(
         {
@@ -317,9 +363,9 @@ if user_question:
     )
 
 
-# ---------------------------------------------------------
+# =========================================================
 # CLEAR CHAT
-# ---------------------------------------------------------
+# =========================================================
 
 st.markdown("---")
 
@@ -331,3 +377,17 @@ if st.button(
     st.session_state.chat_messages = []
 
     st.rerun()
+
+
+# =========================================================
+# FOOTER
+# =========================================================
+
+st.markdown("---")
+
+st.caption(
+    "FinGenie provides educational information only. "
+    "Verify current rates, fees, terms, eligibility, "
+    "and product availability with the relevant "
+    "financial institution."
+)
