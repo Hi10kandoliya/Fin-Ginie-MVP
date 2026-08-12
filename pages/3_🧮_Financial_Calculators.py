@@ -284,16 +284,22 @@ elif calculator == "💰 Compound Interest":
             value=10,
         )
 
-        compounds = st.selectbox(
-            "Compounding Frequency",
-            {
-                "Annually": 1,
-                "Semi-annually": 2,
-                "Quarterly": 4,
-                "Monthly": 12,
-                "Daily": 365,
-            },
-        )
+     compounding_options = {
+    "Annually": 1,
+    "Semi-annually": 2,
+    "Quarterly": 4,
+    "Monthly": 12,
+    "Daily": 365,
+}
+
+compounding_label = st.selectbox(
+    "Compounding Frequency",
+    list(compounding_options.keys()),
+)
+
+compounds = compounding_options[
+    compounding_label
+]
 
 
     if st.button(
