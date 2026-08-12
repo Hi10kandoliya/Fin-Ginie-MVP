@@ -6,10 +6,7 @@ st.set_page_config(
     layout="wide",
 )
 
-st.logo(
-    "logo.png",
-    size="medium",
-)
+
 
 st.sidebar.title("🧠 FinGenie")
 st.sidebar.markdown("### AI Financial Guide")
