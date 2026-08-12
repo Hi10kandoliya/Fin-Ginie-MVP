@@ -5,8 +5,6 @@ from utils.financial_calculators import (
     calculate_mortgage_payment,
     calculate_compound_interest,
     calculate_simple_interest,
-    calculate_savings_goal,
-    calculate_debt_payoff,
     calculate_investment_return,
 )
 
@@ -67,8 +65,6 @@ calculator = st.selectbox(
         "🏠 Mortgage Payment",
         "💰 Compound Interest",
         "📈 Simple Interest",
-        "🎯 Savings Goal",
-        "💳 Debt Payoff",
         "📊 Investment Return",
     ],
 )
