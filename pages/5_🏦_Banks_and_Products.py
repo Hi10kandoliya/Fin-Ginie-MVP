@@ -7,6 +7,7 @@ from utils.bank_data import (
     get_products_by_category,
 )
 
+from utils.ai_helper import generate_financial_chat_response
 
 # =========================================================
 # PAGE CONFIG
@@ -154,7 +155,158 @@ for product_name, product in products.items():
 
         col1, col2 = st.columns(2)
 
+# =========================================================
+# PRODUCT-SPECIFIC FINANCIAL CHAT
+# =========================================================
 
+if st.session_state.get("show_product_chat", False):
+
+    st.markdown("---")
+
+    st.subheader("💬 Ask FinGenie")
+
+    chat_product = st.session_state.get(
+        "chat_product",
+        product_name,
+    )
+
+    chat_bank = st.session_state.get(
+        "chat_bank",
+        bank_name,
+    )
+
+    st.info(
+        f"""
+        You are asking about **{chat_product}**
+        from **{chat_bank}**.
+
+        FinGenie will use this product as context when
+        answering your questions.
+        """
+    )
+
+    # -----------------------------------------------------
+    # DISPLAY CHAT HISTORY
+    # -----------------------------------------------------
+
+    if "financial_chat_history" not in st.session_state:
+
+        st.session_state["financial_chat_history"] = []
+
+
+    for message in st.session_state[
+        "financial_chat_history"
+    ]:
+
+        with st.chat_message(
+            message["role"]
+        ):
+
+            st.markdown(
+                message["content"]
+            )
+
+
+    # -----------------------------------------------------
+    # CHAT INPUT
+    # -----------------------------------------------------
+
+    user_question = st.chat_input(
+        f"Ask a question about {chat_product}..."
+    )
+
+
+    if user_question:
+
+        # Add user question
+        st.session_state[
+            "financial_chat_history"
+        ].append(
+            {
+                "role": "user",
+                "content": user_question,
+            }
+        )
+
+
+        # Display user message immediately
+        with st.chat_message("user"):
+
+            st.markdown(
+                user_question
+            )
+
+
+        # Generate AI response
+        with st.chat_message("assistant"):
+
+            with st.spinner(
+                "FinGenie is thinking..."
+            ):
+
+                try:
+
+                    response = (
+                        generate_financial_chat_response(
+                            product_name=chat_product,
+                            bank_name=chat_bank,
+                            user_question=user_question,
+                            chat_history=st.session_state[
+                                "financial_chat_history"
+                            ],
+                        )
+                    )
+
+                except Exception as e:
+
+                    response = (
+                        "I'm sorry, I couldn't generate "
+                        "a response right now. "
+                        "Please try again."
+                    )
+
+                    st.error(
+                        f"AI error: {e}"
+                    )
+
+
+                st.markdown(
+                    response
+                )
+
+
+        # Save AI response
+        st.session_state[
+            "financial_chat_history"
+        ].append(
+            {
+                "role": "assistant",
+                "content": response,
+            }
+        )
+
+
+    # -----------------------------------------------------
+    # CLEAR CHAT
+    # -----------------------------------------------------
+
+    if st.session_state.get(
+        "financial_chat_history"
+    ):
+
+        if st.button(
+            "🗑️ Clear Conversation",
+            key=f"clear_chat_{chat_product}",
+        ):
+
+            st.session_state[
+                "financial_chat_history"
+            ] = []
+
+            st.rerun()
+
+
+        
         # -------------------------------------------------
         # FEATURES
         # -------------------------------------------------
@@ -242,25 +394,37 @@ for product_name, product in products.items():
             )
 
 
-        with button_col2:
+col1, col2 = st.columns(2)
 
-            if st.button(
-                "💬 Ask FinGenie",
-                key=f"ask_{selected_bank}_{product_name}",
-                use_container_width=True,
-            ):
+with col1:
 
-                st.session_state[
-                    "selected_chat_product"
-                ] = product_name
+    st.link_button(
+        "🌐 Visit Official Bank Website",
+        bank_url,
+        use_container_width=True,
+    )
 
-                st.info(
-                    f"""
-                    You can ask FinGenie questions about
-                    **{product_name}** from the Financial
-                    Assistant page.
-                    """
-                )
+
+with col2:
+
+    if st.button(
+        "💬 Ask FinGenie",
+        use_container_width=True,
+        key=f"ask_fingenie_{bank_name}_{product_name}",
+    ):
+
+        # Store the product context
+        st.session_state["chat_product"] = product_name
+        st.session_state["chat_bank"] = bank_name
+
+        # Open the chat section
+        st.session_state["show_product_chat"] = True
+
+        # Initialize chat history
+        if "financial_chat_history" not in st.session_state:
+            st.session_state["financial_chat_history"] = []
+
+        st.rerun()
 
 
 # =========================================================
