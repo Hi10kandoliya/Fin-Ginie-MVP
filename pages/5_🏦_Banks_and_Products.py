@@ -7,7 +7,7 @@ from utils.bank_data import (
     get_products_by_category,
 )
 
-from utils.ai_helper import generate_financial_chat_response
+
 
 # =========================================================
 # PAGE CONFIG
