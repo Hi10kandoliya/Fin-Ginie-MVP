@@ -8,7 +8,6 @@ from utils.bank_data import (
 )
 
 
-
 # =========================================================
 # PAGE CONFIG
 # =========================================================
@@ -52,7 +51,6 @@ st.warning(
 )
 
 
-
 # =========================================================
 # SEARCH / FILTER
 # =========================================================
@@ -61,9 +59,7 @@ st.subheader(
     "🔎 Find a Financial Product"
 )
 
-
 col1, col2 = st.columns(2)
-
 
 with col1:
 
@@ -71,7 +67,6 @@ with col1:
         "Select a Bank",
         list(banks.keys()),
     )
-
 
 with col2:
 
@@ -89,10 +84,7 @@ with col2:
 # BANK INFORMATION
 # =========================================================
 
-bank = banks[
-    selected_bank
-]
-
+bank = banks[selected_bank]
 
 st.markdown("---")
 
@@ -119,7 +111,7 @@ else:
 
     products = get_products_by_category(
         selected_bank,
-        selected_category
+        selected_category,
     )
 
 
@@ -139,9 +131,7 @@ st.caption(
 
 for product_name, product in products.items():
 
-    with st.container(
-        border=True
-    ):
+    with st.container(border=True):
 
         st.subheader(
             product["name"]
@@ -152,30 +142,19 @@ for product_name, product in products.items():
             f'{product["type"]}'
         )
 
-
         col1, col2 = st.columns(2)
 
-
-        
         # -------------------------------------------------
         # FEATURES
         # -------------------------------------------------
 
         with col1:
 
-            st.markdown(
-                "### ⭐ Key Features"
-            )
+            st.markdown("### ⭐ Key Features")
 
-            for feature in product.get(
-                "features",
-                []
-            ):
+            for feature in product.get("features", []):
 
-                st.markdown(
-                    f"• {feature}"
-                )
-
+                st.markdown(f"• {feature}")
 
         # -------------------------------------------------
         # CONSIDERATIONS
@@ -183,45 +162,27 @@ for product_name, product in products.items():
 
         with col2:
 
-            st.markdown(
-                "### ⚠️ Things to Consider"
-            )
+            st.markdown("### ⚠️ Things to Consider")
 
-            for item in product.get(
-                "considerations",
-                []
-            ):
+            for item in product.get("considerations", []):
 
-                st.markdown(
-                    f"• {item}"
-                )
-
+                st.markdown(f"• {item}")
 
         # -------------------------------------------------
         # WHO MAY CONSIDER
         # -------------------------------------------------
 
-        st.markdown(
-            "### 👤 Common Use Cases"
-        )
+        st.markdown("### 👤 Common Use Cases")
 
-        best_for = product.get(
-            "best_for",
-            []
-        )
+        best_for = product.get("best_for", [])
 
-        st.write(
-            " • ".join(best_for)
-        )
-
+        st.write(" • ".join(best_for))
 
         # -------------------------------------------------
         # NEXT STEPS
         # -------------------------------------------------
 
-        st.markdown(
-            "### 🚀 Next Steps"
-        )
+        st.markdown("### 🚀 Next Steps")
 
         st.write(
             """
@@ -231,9 +192,11 @@ for product_name, product in products.items():
             """
         )
 
+        # -------------------------------------------------
+        # ACTIONS
+        # -------------------------------------------------
 
         button_col1, button_col2 = st.columns(2)
-
 
         with button_col1:
 
@@ -243,38 +206,26 @@ for product_name, product in products.items():
                 use_container_width=True,
             )
 
+        with button_col2:
 
-col1, col2 = st.columns(2)
+            if st.button(
+                "💬 Ask FinGenie",
+                use_container_width=True,
+                key=f"ask_fingenie_{selected_bank}_{product_name}",
+            ):
 
-with col1:
+                # Store the product context
+                st.session_state["chat_product"] = product_name
+                st.session_state["chat_bank"] = selected_bank
 
-    st.link_button(
-        "🌐 Visit Official Bank Website",
-        official_url,
-        use_container_width=True,
-    )
+                # Open the chat section
+                st.session_state["show_product_chat"] = True
 
+                # Initialize chat history
+                if "financial_chat_history" not in st.session_state:
+                    st.session_state["financial_chat_history"] = []
 
-with col2:
-
-    if st.button(
-        "💬 Ask FinGenie",
-        use_container_width=True,
-        key=f"ask_fingenie_{bank_name}_{product_name}",
-    ):
-
-        # Store the product context
-        st.session_state["chat_product"] = product_name
-        st.session_state["chat_bank"] = bank_name
-
-        # Open the chat section
-        st.session_state["show_product_chat"] = True
-
-        # Initialize chat history
-        if "financial_chat_history" not in st.session_state:
-            st.session_state["financial_chat_history"] = []
-
-        st.rerun()
+                st.rerun()
 
 
 # =========================================================
