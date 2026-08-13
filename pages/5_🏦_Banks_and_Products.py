@@ -250,7 +250,7 @@ with col1:
 
     st.link_button(
         "🌐 Visit Official Bank Website",
-        bank_url,
+        official_url,
         use_container_width=True,
     )
 
