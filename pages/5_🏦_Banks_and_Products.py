@@ -288,26 +288,17 @@ if st.session_state.get("show_product_chat"):
         )
 
         # Call your existing LLM function from Financial Assistance page
-        
-
         response = generate_chat_response(
-            user_question=user_input,
-            conversation_history=(
-                    st.session_state
-                    .chat_messages[-20:-1]
-                ),
-            product_context=(
-                    context_text
-                ),
-
-            user_profile_context=(
-                    user_profile_context
-                ),
-        
-        # Add assistant message
-        st.session_state["financial_chat_history"].append(
-            {"role": "assistant", "content": response}
+        user_question=user_input,
+        conversation_history=st.session_state["financial_chat_history"][-20:],
+        product_context=context_text,
+        user_profile_context=user_profile_context
         )
+    
+        st.session_state["financial_chat_history"].append(
+        {"role": "assistant", "content": response}
+        )
+             
 
         st.rerun()
 
