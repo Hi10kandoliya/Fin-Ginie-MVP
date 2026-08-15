@@ -282,37 +282,30 @@ if st.session_state.get("show_product_chat"):
     for msg in st.session_state["financial_chat_history"]:
         st.chat_message(msg["role"]).write(msg["content"])
 
-    # Chat input
-    user_input = st.chat_input("Ask FinGenie…")
+# Chat input
+user_input = st.chat_input("Ask FinGenie…")
 
-    if user_input:
-        # Add user message
-        st.session_state["financial_chat_history"].append(
-            {"role": "user", "content": user_input}
-        )
+if user_input:
+    # Add user message
+    st.session_state["financial_chat_history"].append(
+        {"role": "user", "content": user_input}
+    )
 
-        with st.chat_message(
-        "assistant"
-    ):
-
-        with st.spinner(
-            "FinGenie is thinking..."
-        ):
-
-        # Call your existing LLM function from Financial Assistance page
+    # Show FinGenie thinking spinner
+    with st.spinner("FinGenie is thinking…"):
         response = generate_chat_response(
-        user_question=user_input,
-        conversation_history=st.session_state["financial_chat_history"][-20:],
-        product_context=context_text,
-        user_profile_context=user_profile_context
+            user_question=user_input,
+            conversation_history=st.session_state["financial_chat_history"][-20:],
+            product_context=context_text,
+            user_profile_context=user_profile_context
         )
-    
-        st.session_state["financial_chat_history"].append(
-        {"role": "assistant", "content": response}
-        )
-             
 
-        st.rerun()
+    # Add assistant message
+    st.session_state["financial_chat_history"].append(
+        {"role": "assistant", "content": response}
+    )
+
+    st.rerun()
 
 
 
