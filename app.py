@@ -10,6 +10,7 @@ st.markdown(hide_header, unsafe_allow_html=True)
 
 st.sidebar.markdown(
     """
+    <b> APPLICATION </b>
     <a href="/">
         <img src="logo.png" width="200">
     </a>
