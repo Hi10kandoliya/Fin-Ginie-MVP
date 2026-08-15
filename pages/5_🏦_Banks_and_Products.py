@@ -261,12 +261,24 @@ based on general financial literacy, risk awareness, and product suitability.
 
 st.markdown("---")
 
-# Only show chat if user clicked Ask FinGenie
 if st.session_state.get("show_product_chat"):
 
     st.subheader("💬 Chat with FinGenie About This Product")
 
-    # Build context from selected bank + product
+    # --- ACTION BUTTONS ---
+    btn_col1, btn_col2 = st.columns([1, 1])
+
+    with btn_col1:
+        if st.button("🙈 Hide Chat"):
+            st.session_state["show_product_chat"] = False
+            st.rerun()
+
+    with btn_col2:
+        if st.button("🧹 Clear Chat"):
+            st.session_state["financial_chat_history"] = []
+            st.rerun()
+
+    # --- CONTEXT ---
     chat_bank = st.session_state.get("chat_bank")
     chat_product = st.session_state.get("chat_product")
 
@@ -278,34 +290,41 @@ if st.session_state.get("show_product_chat"):
     Provide helpful, clear, educational guidance.
     """
 
-    # Show previous messages
+    # --- USER PROFILE CONTEXT ---
+    user_profile_context = """
+    The user is exploring financial products and may need guidance
+    based on general financial literacy, risk awareness, and product suitability.
+    """
+
+    # --- SHOW CHAT HISTORY ---
     for msg in st.session_state["financial_chat_history"]:
         st.chat_message(msg["role"]).write(msg["content"])
 
-# Chat input
-user_input = st.chat_input("Ask FinGenie…")
+    # --- CHAT INPUT ---
+    user_input = st.chat_input("Ask FinGenie…")
 
-if user_input:
-    # Add user message
-    st.session_state["financial_chat_history"].append(
-        {"role": "user", "content": user_input}
-    )
-
-    # Show FinGenie thinking spinner
-    with st.spinner("FinGenie is thinking…"):
-        response = generate_chat_response(
-            user_question=user_input,
-            conversation_history=st.session_state["financial_chat_history"][-20:],
-            product_context=context_text,
-            user_profile_context=user_profile_context
+    if user_input:
+        # Add user message
+        st.session_state["financial_chat_history"].append(
+            {"role": "user", "content": user_input}
         )
 
-    # Add assistant message
-    st.session_state["financial_chat_history"].append(
-        {"role": "assistant", "content": response}
-    )
+        # --- THINKING SPINNER ---
+        with st.spinner("FinGenie is thinking…"):
+            response = generate_chat_response(
+                user_question=user_input,
+                conversation_history=st.session_state["financial_chat_history"][-20:],
+                product_context=context_text,
+                user_profile_context=user_profile_context
+            )
 
-    st.rerun()
+        # Add assistant message
+        st.session_state["financial_chat_history"].append(
+            {"role": "assistant", "content": response}
+        )
+
+        st.rerun()
+
 
 
 
