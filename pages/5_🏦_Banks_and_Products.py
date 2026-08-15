@@ -7,6 +7,18 @@ from utils.bank_data import (
     get_products_by_category,
 )
 
+def open_ginie_chat(context):
+    st.session_state["ginie_context"] = context
+    st.session_state["show_ginie"] = True
+
+# Button
+if st.button("Ask Ginie"):
+    selected_bank = st.session_state.get("selected_bank")
+    selected_product = st.session_state.get("selected_product")
+
+    context = f"User is asking about {selected_bank} - {selected_product}"
+    open_ginie_chat(context)
+
 
 # =========================================================
 # PAGE CONFIG
@@ -247,3 +259,19 @@ st.link_button(
     f"Visit {selected_bank}",
     bank["website"],
 )
+
+if st.session_state.get("show_ginie"):
+    st.chat_message("assistant").write("Hi, I'm Ginie! Ask me anything.")
+    st.chat_message("assistant").write(
+        f"(Context loaded: {st.session_state['ginie_context']})"
+    )
+
+    user_input = st.chat_input("Ask Ginie…")
+    if user_input:
+        st.chat_message("user").write(user_input)
+        # Call your LLM here
+        response = call_llm(user_input, st.session_state["ginie_context"])
+        st.chat_message("assistant").write(response)
+
+
+
