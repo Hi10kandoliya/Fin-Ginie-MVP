@@ -6,6 +6,7 @@ from utils.bank_data import (
     get_product_categories,
     get_products_by_category,
 )
+from utils.ai_helper import call_llm
 
 def open_ginie_chat(context):
     st.session_state["ginie_context"] = context
