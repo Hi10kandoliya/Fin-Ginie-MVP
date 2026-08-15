@@ -250,7 +250,11 @@ st.link_button(
     bank["website"],
 )
 
-
+# Build user profile context (same style as Financial Assistance page)
+user_profile_context = """
+The user is exploring financial products and may need guidance
+based on general financial literacy, risk awareness, and product suitability.
+"""
 # =========================================================
 # PRODUCT CHAT SECTION (BOTTOM OF PAGE)
 # =========================================================
