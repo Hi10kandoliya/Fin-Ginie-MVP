@@ -291,6 +291,14 @@ if st.session_state.get("show_product_chat"):
             {"role": "user", "content": user_input}
         )
 
+        with st.chat_message(
+        "assistant"
+    ):
+
+        with st.spinner(
+            "FinGenie is thinking..."
+        ):
+
         # Call your existing LLM function from Financial Assistance page
         response = generate_chat_response(
         user_question=user_input,
