@@ -1,5 +1,5 @@
 import streamlit as st
-
+from pathlib import Path
 
 
 st.set_page_config(
@@ -7,9 +7,15 @@ st.set_page_config(
     page_icon="🧠",
     layout="wide",
 )
+# Get the directory where app.py is located
+BASE_DIR = Path(__file__).resolve().parent
 
+# Logo path
+LOGO_PATH = BASE_DIR / "logo1.png"
 
-st.sidebar.image("logo1.png", width=180)
+# Sidebar
+st.sidebar.image(str(LOGO_PATH), width=180)
+    
 st.sidebar.title("🧠 FinGenie")
 st.sidebar.markdown("### AI Financial Guide")
 
