@@ -251,6 +251,56 @@ st.link_button(
 )
 
 
+# =========================================================
+# PRODUCT CHAT SECTION (BOTTOM OF PAGE)
+# =========================================================
+
+st.markdown("---")
+
+# Only show chat if user clicked Ask FinGenie
+if st.session_state.get("show_product_chat"):
+
+    st.subheader("💬 Chat with FinGenie About This Product")
+
+    # Build context from selected bank + product
+    chat_bank = st.session_state.get("chat_bank")
+    chat_product = st.session_state.get("chat_product")
+
+    context_text = f"""
+    The user is asking about the financial product:
+    • Bank: {chat_bank}
+    • Product: {chat_product}
+
+    Provide helpful, clear, educational guidance.
+    """
+
+    # Show previous messages
+    for msg in st.session_state["financial_chat_history"]:
+        st.chat_message(msg["role"]).write(msg["content"])
+
+    # Chat input
+    user_input = st.chat_input("Ask FinGenie…")
+
+    if user_input:
+        # Add user message
+        st.session_state["financial_chat_history"].append(
+            {"role": "user", "content": user_input}
+        )
+
+        # Call your existing LLM function from Financial Assistance page
+        from utils.ai_helper import call_llm_financial_assistance
+
+        response = call_llm_financial_assistance(
+            user_input,
+            context_text
+        )
+
+        # Add assistant message
+        st.session_state["financial_chat_history"].append(
+            {"role": "assistant", "content": response}
+        )
+
+        st.rerun()
 
 
 
