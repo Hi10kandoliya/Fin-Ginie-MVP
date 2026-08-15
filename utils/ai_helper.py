@@ -83,7 +83,36 @@ def generate_chat_response(
             "right now. Please try again."
         )
 
+#====================================
+# Product related call
+#====================================
+import openai
 
+def call_llm(user_message, context):
+    """
+    Sends user message + context to OpenAI and returns the assistant response.
+    """
+
+    prompt = f"""
+    You are Ginie, an AI assistant inside Fin-Ginie.
+    Use the following context to answer the user's question:
+
+    CONTEXT:
+    {context}
+
+    USER QUESTION:
+    {user_message}
+    """
+
+    response = openai.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": "You are Ginie, a helpful financial assistant."},
+            {"role": "user", "content": prompt}
+        ]
+    )
+
+    return response.choices[0].message["content"]
 
 
 # =========================================================
