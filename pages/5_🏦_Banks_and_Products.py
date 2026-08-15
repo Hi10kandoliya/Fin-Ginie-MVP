@@ -291,10 +291,19 @@ if st.session_state.get("show_product_chat"):
         
 
         response = generate_chat_response(
-            user_input,
-            context_text
-        )
+            user_question=user_input,
+            conversation_history=(
+                    st.session_state
+                    .chat_messages[-20:-1]
+                ),
+            product_context=(
+                    context_text
+                ),
 
+            user_profile_context=(
+                    user_profile_context
+                ),
+        
         # Add assistant message
         st.session_state["financial_chat_history"].append(
             {"role": "assistant", "content": response}
