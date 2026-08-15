@@ -16,7 +16,7 @@ st.sidebar.markdown(
     """,
     unsafe_allow_html=True
 )
-
+# Hide Streamlit default header
 
 st.set_page_config(
     page_title="FinGenie",
