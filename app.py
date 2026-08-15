@@ -14,7 +14,8 @@ BASE_DIR = Path(__file__).resolve().parent
 LOGO_PATH = BASE_DIR / "logo1.png"
 
 # Sidebar
-st.sidebar.image(str(LOGO_PATH), width=180)
+with st.sidebar:
+    st.image(str(LOGO_PATH), width=180)
     
 st.sidebar.title("🧠 FinGenie")
 st.sidebar.markdown("### AI Financial Guide")
