@@ -1,23 +1,6 @@
 import streamlit as st
 
-# Hide Streamlit default header
-hide_header = """
-<style>
-header {visibility: hidden;}
-</style>
-"""
-st.markdown(hide_header, unsafe_allow_html=True)
 
-st.sidebar.markdown(
-    """
-    <b> APPLICATION </b>
-    <a href="/">
-        <img src="logo.png" width="200">
-    </a>
-    """,
-    unsafe_allow_html=True
-)
-# Hide Streamlit default header
 
 st.set_page_config(
     page_title="FinGenie",
