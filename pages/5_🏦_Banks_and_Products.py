@@ -6,7 +6,7 @@ from utils.bank_data import (
     get_product_categories,
     get_products_by_category,
 )
-
+from utils.ai_helper import generate_chat_response
 
 
 
@@ -288,9 +288,9 @@ if st.session_state.get("show_product_chat"):
         )
 
         # Call your existing LLM function from Financial Assistance page
-        from utils.ai_helper import call_llm_financial_assistance
+        
 
-        response = call_llm_financial_assistance(
+        response = generate_chat_response(
             user_input,
             context_text
         )
