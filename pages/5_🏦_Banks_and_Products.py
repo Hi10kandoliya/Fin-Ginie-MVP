@@ -265,19 +265,7 @@ if st.session_state.get("show_product_chat"):
 
     st.subheader("💬 Chat with FinGenie About This Product")
 
-    # --- ACTION BUTTONS ---
-    btn_col1, btn_col2 = st.columns([1, 1])
-
-    with btn_col1:
-        if st.button("🙈 Hide Chat"):
-            st.session_state["show_product_chat"] = False
-            st.rerun()
-
-    with btn_col2:
-        if st.button("🧹 Clear Chat"):
-            st.session_state["financial_chat_history"] = []
-            st.rerun()
-
+  
     # --- CONTEXT ---
     chat_bank = st.session_state.get("chat_bank")
     chat_product = st.session_state.get("chat_product")
@@ -324,6 +312,18 @@ if st.session_state.get("show_product_chat"):
         )
 
         st.rerun()
+    # --- BUTTONS BELOW CHAT INPUT ---
+    btn_col1, btn_col2 = st.columns([1, 1])
+
+    with btn_col1:
+        if st.button("🙈 Hide Chat"):
+            st.session_state["show_product_chat"] = False
+            st.rerun()
+
+    with btn_col2:
+        if st.button("🧹 Clear Chat"):
+            st.session_state["financial_chat_history"] = []
+            st.rerun()
 
 
 
