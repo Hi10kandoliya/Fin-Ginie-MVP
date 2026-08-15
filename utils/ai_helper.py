@@ -92,7 +92,8 @@ def call_llm(user_message, context):
     """
     Sends user message + context to OpenAI and returns the assistant response.
     """
-
+    client = get_openai_client()
+    
     prompt = f"""
     You are Ginie, an AI assistant inside Fin-Ginie.
     Use the following context to answer the user's question:
