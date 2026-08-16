@@ -14,7 +14,7 @@ st.set_page_config(
 
 BASE_DIR = Path(__file__).resolve().parent
 
-LOGO = BASE_DIR / "assets" / "FinGenie_Logo.PNG"
+LOGO = BASE_DIR / "assets" / "FinGenie_Logo.png"
 
 # ==========================================
 # Branding
