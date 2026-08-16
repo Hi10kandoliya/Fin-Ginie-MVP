@@ -36,55 +36,7 @@ with st.sidebar:
 
     st.divider()
 
-# ==========================================
-# Navigation
-# ==========================================
 
-pages = [
-    st.Page(
-        "pages/1_💬_Financial_Assistant.py",
-        title="Financial Assistant",
-        icon="💬"
-    ),
-
-    st.Page(
-        "pages/2_📊_Product_Comparison.py",
-        title="Product Comparison",
-        icon="📊"
-    ),
-
-    st.Page(
-        "pages/3_🧮_Calculators.py",
-        title="Calculators",
-        icon="🧮"
-    ),
-
-    st.Page(
-        "pages/4_🎯_Financial_Goals.py",
-        title="Financial Goals",
-        icon="🎯"
-    ),
-
-    st.Page(
-        "pages/5_🏦_Banks_Products.py",
-        title="Banks & Products",
-        icon="🏦"
-    ),
-
-    st.Page(
-        "pages/6_💰_Budget_Planner.py",
-        title="Budget Planner",
-        icon="💰"
-    ),
-
-    st.Page(
-        "pages/7_💳_Debt_Payoff.py",
-        title="Debt Payoff",
-        icon="💳"
-    ),
-]
-
-pg = st.navigation(pages)
 
 pg.run()
 
