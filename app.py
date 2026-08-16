@@ -88,7 +88,7 @@ pages = [
     ),
 
     st.Page(
-        "pages/2_📊_Product_Comparison.py",
+        "pages/2_⚖️_Product Comparison.py",
         title="Product Comparison",
         icon="📊",
     ),
@@ -112,7 +112,7 @@ pages = [
     ),
 
     st.Page(
-        "pages/6_💰_Budget_Planner.py",
+        "pages/6_📊_Budget_Planner.py",
         title="Budget Planner",
         icon="💰",
     ),
