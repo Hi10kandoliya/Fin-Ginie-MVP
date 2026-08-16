@@ -24,22 +24,7 @@ with st.sidebar:
 
     st.image(str(LOGO), width=180)
 
-    st.markdown(
-        "<h2 style='text-align:center;'>FinGenie</h2>",
-        unsafe_allow_html=True
-    )
-
-    st.markdown(
-        "<p style='text-align:center;'>AI Financial Guide</p>",
-        unsafe_allow_html=True
-    )
-
     st.divider()
-
-
-
-
-
     
 st.sidebar.title("🧠 FinGenie")
 st.sidebar.markdown("### AI Financial Guide")
