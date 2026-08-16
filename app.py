@@ -22,11 +22,7 @@ LOGO = BASE_DIR / "assets" / "FinGenie_Logo.png"
 
 with st.sidebar:
 
-    st.image(str(LOGO), width=180)
-
-    st.divider()
-    
-st.sidebar.title("🧠 FinGenie")
+st.image(str(LOGO), width=180)
 st.sidebar.markdown("### AI Financial Guide")
 
 st.title("🧠 Welcome to FinGenie")
