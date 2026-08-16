@@ -94,7 +94,7 @@ pages = [
     ),
 
     st.Page(
-        "pages/3_🧮_Calculators.py",
+        "pages/3_🧮_Financial_Calculators.py",
         title="Calculators",
         icon="🧮",
     ),
