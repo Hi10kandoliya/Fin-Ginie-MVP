@@ -38,7 +38,7 @@ with st.sidebar:
 
 
 
-pg.run()
+
 
     
 st.sidebar.title("🧠 FinGenie")
